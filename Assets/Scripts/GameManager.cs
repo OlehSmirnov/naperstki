@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class NewBehaviourScript : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private List<Transform> containers;
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        
+        foreach (Transform t in containers)
+        {
+            Vector2 container = t.position;
+            t.position = new Vector2(container.x, -1.1f);
+        }
+        Destroy(GameObject.Find("Play"));
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Gameplay");
     }
 }
