@@ -15,8 +15,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (Transform t in containers)
         {
-            Vector2 container = t.position;
-            t.position = new Vector2(container.x, -1.1f);
+            t.GetComponent<Animator>().enabled = true;
         }
         Destroy(GameObject.Find("Play"));
         StartCoroutine(Shuffle());
