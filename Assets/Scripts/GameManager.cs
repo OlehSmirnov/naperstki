@@ -6,13 +6,12 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<Transform> containers;
-    private Animator animator1, animator2, animator3, animator;
+    private Animator animator1, animator2, animator3;
     void Start()
     {
-        // animator1 = containers[0].GetComponent<Animator>(); 
-        // animator2 = containers[1].GetComponent<Animator>();
-        // animator3 = containers[2].GetComponent<Animator>();
-        animator = GetComponent<Animator>();
+         animator1 = containers[0].GetComponent<Animator>(); 
+         animator2 = containers[1].GetComponent<Animator>();
+         animator3 = containers[2].GetComponent<Animator>();
     }
 
     public void StartGame()
