@@ -65,14 +65,17 @@ public class GameManager : MonoBehaviour
         {
             animator1.Play("Container anim1");
             animator2.Play("Container anim4");
+            animator3.Play("Container3 Idle");
         }
         else if (index1 == 0 && index2 == 2 || index1 == 2 && index2 == 0)
         {
             animator1.Play("Container anim5");
+            animator2.Play("Container2 Idle");
             animator3.Play("Container anim6");
         }
         else if (index1 == 1 && index2 == 2 || index1 == 2 && index2 == 1)
         {
+            animator1.Play("Container1 Idle");
             animator2.Play("Container anim2");
             animator3.Play("Container anim3");
         }
