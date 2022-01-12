@@ -6,9 +6,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<Transform> containers;
+    private Animator animator1, animator2, animator3, animator;
     void Start()
     {
-        
+        // animator1 = containers[0].GetComponent<Animator>(); 
+        // animator2 = containers[1].GetComponent<Animator>();
+        // animator3 = containers[2].GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     public void StartGame()
@@ -58,7 +62,21 @@ public class GameManager : MonoBehaviour
 
     void Swap(int index1, int index2)
     {
-        (containers[index1], containers[index2]) = (containers[index2], containers[index1]);
+        if (index1 == 0 && index2 == 1 || index1 == 1 && index2 == 0)
+        {
+            animator1.Play("Container anim1");
+            animator2.Play("Container anim4");
+        }
+        else if (index1 == 0 && index2 == 2 || index1 == 2 && index2 == 0)
+        {
+            animator1.Play("Container anim5");
+            animator3.Play("Container anim6");
+        }
+        else if (index1 == 1 && index2 == 2 || index1 == 2 && index2 == 1)
+        {
+            animator2.Play("Container anim2");
+            animator3.Play("Container anim3");
+        }
         print($"{index1} swapped with {index2}");
     }
 }
