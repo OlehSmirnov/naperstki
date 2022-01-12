@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<Transform> containers;
     private Animator animator1, animator2, animator3, coinAnimator;
-    private int coinIndex;
+    private int coinIndex = 1;
+    private GameObject btnEasy, btnMedium, btnHard;
+    private float difficulty = 0.5f;
+    private int score;
     void Start()
     {
          animator1 = containers[0].GetComponent<Animator>(); 
          animator2 = containers[1].GetComponent<Animator>();
          animator3 = containers[2].GetComponent<Animator>();
          coinAnimator = GameObject.Find("Coin").GetComponent<Animator>();
-         coinIndex = 1;
+         btnEasy = GameObject.Find("Easy");
+         btnMedium = GameObject.Find("Medium");
+         btnHard = GameObject.Find("Hard");
     }
 
     public void StartGame()
@@ -24,6 +30,9 @@ public class GameManager : MonoBehaviour
             t.GetComponent<Animator>().enabled = true;
         }
         Destroy(GameObject.Find("Play"));
+        Destroy(btnEasy);
+        Destroy(btnMedium);
+        Destroy(btnHard);
         StartCoroutine(Shuffle());
     }
 
@@ -34,9 +43,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Shuffle()
     {
-        for (int i = 0; i < 10; i++)
+        GameObject.Find("NapLeft").GetComponent<Button>().enabled = false;
+        GameObject.Find("NapMiddle").GetComponent<Button>().enabled = false;
+        GameObject.Find("NapRight").GetComponent<Button>().enabled = false;
+        int randomRange = Random.Range(3, 10);
+        for (int i = 0; i < randomRange; i++)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(difficulty);
             int randomContainer1 = Random.Range(0, 3);
             int randomContainer2;
             if (randomContainer1 == 0)
@@ -59,11 +72,13 @@ public class GameManager : MonoBehaviour
                     Swap(1, 2);
             }
         }
+        GameObject.Find("NapLeft").GetComponent<Button>().enabled = true;
+        GameObject.Find("NapMiddle").GetComponent<Button>().enabled = true;
+        GameObject.Find("NapRight").GetComponent<Button>().enabled = true;
     }
 
     void Swap(int index1, int index2)
     {
-        print("Coin index before swap:" + coinIndex);
         if (index1 == 0 && index2 == 1 || index1 == 1 && index2 == 0)
         {
             animator1.CrossFadeInFixedTime("Container anim1", 0);
@@ -112,5 +127,102 @@ public class GameManager : MonoBehaviour
                 coinIndex = 2;
             }
         }
+    }
+
+    public void SelectDifficultyEasy()
+    {
+        difficulty = 0.7f;
+        var colors = btnMedium.GetComponent<Button> ().colors;
+        colors.normalColor = Color.white;
+        btnMedium.GetComponent<Button> ().colors = colors;
+    }
+
+    public void SelectDifficultyMedium()
+    {
+        animator1.speed = 1.3f;
+        animator2.speed = 1.3f;
+        animator3.speed = 1.3f;
+        coinAnimator.speed = 1.3f;
+    }
+
+    public void SelectDifficultyHard()
+    {
+        difficulty = 0.3f;
+        animator1.speed = 1.5f;
+        animator2.speed = 1.5f;
+        animator3.speed = 1.5f;
+        coinAnimator.speed = 1.5f;
+        var colors = btnMedium.GetComponent<Button> ().colors;
+        colors.normalColor = Color.white;
+        btnMedium.GetComponent<Button> ().colors = colors;
+    }
+
+    public void SelectLeftNap()
+    {
+        ShowNaps();
+        if (coinIndex == 0)
+        {
+            GetComponent<AudioSource>().Play();
+            score++;
+            GameObject.Find("ScoreCounter").GetComponent<Text>().text = score.ToString();
+            StartCoroutine(Wait(1f));
+        }
+        else
+        {
+            GetComponents<AudioSource>()[1].Play();
+            StartCoroutine(WaitBeforeMenu(1.5f));
+        }
+    }
+    
+    public void SelectMiddleNap()
+    {
+        ShowNaps();
+        if (coinIndex == 1)
+        {
+            GetComponent<AudioSource>().Play();
+            score++;
+            GameObject.Find("ScoreCounter").GetComponent<Text>().text = score.ToString();
+            StartCoroutine(Wait(1f));
+        }
+        else
+        {
+            GetComponents<AudioSource>()[1].Play();
+            StartCoroutine(WaitBeforeMenu((1.5f)));
+        }
+    }
+    
+    public void SelectRightNap()
+    {
+        ShowNaps();
+        if (coinIndex == 2)
+        {
+            GetComponent<AudioSource>().Play();
+            score++;
+            GameObject.Find("ScoreCounter").GetComponent<Text>().text = score.ToString();
+            StartCoroutine(Wait(1f));
+        }
+        else
+        {
+            GetComponents<AudioSource>()[1].Play();
+            StartCoroutine(WaitBeforeMenu(1.5f));
+        }
+    }
+    IEnumerator WaitBeforeMenu(float time)
+    {
+        yield return new WaitForSeconds(time);
+        ResetGame();
+    }
+
+    IEnumerator Wait(float time)
+    {
+        yield return new WaitForSeconds(time);
+        StartCoroutine(Shuffle());
+    }
+
+    private void ShowNaps()
+    {
+        animator1.Play("Container UpLeft");
+        animator2.Play("Container UpMiddle");
+        animator3.Play("Container UpRight");
     }
 }
